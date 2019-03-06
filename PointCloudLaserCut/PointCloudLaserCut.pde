@@ -8,6 +8,8 @@ PointCloud pointCloud;
 String pointCloudFile = "";
 float startDepth = 400;
 
+LaserCutExporter exporter;
+
 void setup()
 {
   size(1280, 720, P3D);
@@ -33,12 +35,17 @@ void setup()
   pointCloud.load(pointCloudFile);
 
   pointCloud.normalizeCloud(width, height, startDepth);
+
+  exporter = new LaserCutExporter(pointCloud);
+
+  setupUI();
 }
 
 void draw()
 {
   visusalizer.render(this.g, pointCloud);
 
+  exporter.render(this.g);
   showInfo();
 }
 
@@ -53,4 +60,8 @@ void showInfo()
   stroke(255, 100, 100);
   PVector d = pointCloud.dimensions;
   box(d.x, d.y, d.z);
+
+  cam.beginHUD();
+  cp5.draw();
+  cam.endHUD();
 }
