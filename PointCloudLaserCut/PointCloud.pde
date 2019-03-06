@@ -54,6 +54,8 @@ class PointCloud
 
     // scale dimensions
     dimensions.mult(scale);
+    
+    println("proportions: " + dimensions.x / dimensions.y);
   }
 
   // loads new pointcloud from ply ascii file

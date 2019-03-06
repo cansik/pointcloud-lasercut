@@ -1,4 +1,4 @@
-import processing.pdf.*;
+import processing.pdf.*; //<>//
 
 class LaserCutExporter
 {
@@ -6,9 +6,9 @@ class LaserCutExporter
   int pointCloudSamples = 10;
 
   // mm
-  int outputWidth = 75;
-  int outputHeight = 150;
-  float pointRadius = 0.1;
+  int outputWidth = round(100 * 0.72752184);
+  int outputHeight = 100;
+  float pointRadius = 0.5;
 
   PointCloud cloud;
 
@@ -22,32 +22,38 @@ class LaserCutExporter
   public void export(String filePath)
   {
     exporter.exporting = true;
-    PVector d = pointCloud.dimensions;
-    float sliceSize = d.z / slices;
+    PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
 
-    PGraphicsPDF pdf = (PGraphicsPDF)beginRecord(PDF, filePath);
-    pdf.setSize(round(mm(900)), round(mm(600)));
-    pdf.beginDraw();
+    float sliceSize = d.z / slices;
 
     for (int i = 0; i < slices; i++)
     {
       println("exporting slice " + i + "...");
-      exportSlice(pdf, sliceSize * i, sliceSize * (i + 1));
-      pdf.nextPage();
-    }
 
-    endRecord();
+      PGraphicsPDF pdf = (PGraphicsPDF)beginRecord(PDF, filePath + "tree_slice_" + i + ".pdf");
+      pdf.setSize(round(mm(900)), round(mm(600)));
+      pdf.beginDraw();
+
+      float startSlice = sliceSize * i + (d.z * -0.5);
+      float endSlice = sliceSize * (i + 1) + (d.z * -0.5);
+
+      println("start: " + startSlice + " endslice: " + endSlice);
+      exportSlice(pdf, startSlice, endSlice);
+
+      endRecord();
+    }
 
     println("cloud exported!");
     exporter.exporting = false;
   }
 
-  private void exportSlice(PGraphicsPDF pdf, float sliceStart, float sliceEnd)
+  private void exportSlice(PGraphics pdf, float sliceStart, float sliceEnd)
   {
-    PVector d = pointCloud.dimensions;
+    PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
+    PVector t = PVector.div(cloud.translation, cloud.scale);
 
     cut(pdf);
-    rect(0, 0, outputWidth, outputHeight);
+    rect(mm(0), mm(0), mm(outputWidth), mm(outputHeight));
 
     engrave(pdf);
 
@@ -55,6 +61,9 @@ class LaserCutExporter
     for (int i = 0; i < cloud.vertices.getVertexCount(); i += pointCloudSamples)
     {
       PVector v = cloud.vertices.getVertex(i);
+
+      // apply translation
+      v.add(t);
 
       // skip if not relevant
       if (!(v.z >= sliceStart && v.z <= sliceEnd)) continue;
@@ -67,14 +76,14 @@ class LaserCutExporter
     }
   }
 
-  private void cut(PGraphicsPDF pdf)
+  private void cut(PGraphics pdf)
   {
     pdf.noFill();
     pdf.stroke(0);
     pdf.strokeWeight(0.1f);
   }
 
-  private void engrave(PGraphicsPDF pdf)
+  private void engrave(PGraphics pdf)
   {
     pdf.fill(0);
     pdf.noStroke();

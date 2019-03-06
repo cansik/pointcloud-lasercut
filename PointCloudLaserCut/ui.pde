@@ -45,7 +45,7 @@ void export(int value)
   if (!isUIInitialized) return;
   if (exporter.exporting) return;
 
-  exporter.export(sketchPath("export/tree.pdf"));
+  exporter.export(sketchPath("export/"));
   println("exported cloud");
 }
 
