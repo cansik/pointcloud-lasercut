@@ -21,10 +21,10 @@ void setupUI()
   cp5.setColorActive(color(255, 132, 124));
 
   int h = 10;
-  cp5.addSlider("samples", 10, 150, 10, h, 100, 20)
+  cp5.addSlider("slices", 10, 150, 10, h, 100, 20)
     .setRange(1, 15)
-    .setLabel("Samples")
-    .setValue(exporter.samples)
+    .setLabel("Slices")
+    .setValue(exporter.slices)
     .plugTo(exporter);
 
   h += 30;
@@ -43,8 +43,8 @@ void setupUI()
 void export(int value)
 {
   if (!isUIInitialized) return;
-  if(exporter.exporting) return;
-  
+  if (exporter.exporting) return;
+
   exporter.export(sketchPath("export/tree.pdf"));
   println("exported cloud");
 }

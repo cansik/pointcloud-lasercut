@@ -31,20 +31,18 @@ class PointCloud
     PVector maxVertex = new PVector(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
     PVector minVertex = new PVector(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 
-    // find center point
-    center = new PVector();
-
     for (int i = 0; i < vertices.getVertexCount(); i++)
     {
       PVector vertex = vertices.getVertex(i);
       updateMaxVector(maxVertex, vertex);
       updateMinVector(minVertex, vertex);
-
-      center.add(vertex.x, vertex.y, vertex.z);
     }
 
-    // find center
-    center.mult(1.0f / vertices.getVertexCount());
+    // find center of cloud
+    center = new PVector();
+    center.add(maxVertex);
+    center.add(minVertex);
+    center.mult(0.5f);
 
     // scale by length of cloud
     dimensions = PVector.sub(maxVertex, minVertex);

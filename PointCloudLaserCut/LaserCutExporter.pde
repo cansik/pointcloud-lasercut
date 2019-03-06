@@ -2,12 +2,13 @@ import processing.pdf.*;
 
 class LaserCutExporter
 {
-  int samples = 5;
+  int slices = 5;
+  int pointCloudSamples = 10;
 
   // mm
   int outputWidth = 75;
   int outputHeight = 150;
-  float pointRadius = 1;
+  float pointRadius = 0.1;
 
   PointCloud cloud;
 
@@ -22,13 +23,13 @@ class LaserCutExporter
   {
     exporter.exporting = true;
     PVector d = pointCloud.dimensions;
-    float sliceSize = d.z / samples;
+    float sliceSize = d.z / slices;
 
     PGraphicsPDF pdf = (PGraphicsPDF)beginRecord(PDF, filePath);
-    pdf.setSize(round(mm(outputWidth)), round(mm(outputHeight)));
+    pdf.setSize(round(mm(900)), round(mm(600)));
     pdf.beginDraw();
 
-    for (int i = 0; i < samples; i++)
+    for (int i = 0; i < slices; i++)
     {
       println("exporting slice " + i + "...");
       exportSlice(pdf, sliceSize * i, sliceSize * (i + 1));
@@ -45,32 +46,46 @@ class LaserCutExporter
   {
     PVector d = pointCloud.dimensions;
 
-    // setup drawing parameters
-    noStroke();
-    fill(0);
+    cut(pdf);
+    rect(0, 0, outputWidth, outputHeight);
+
+    engrave(pdf);
 
     // go through all vertices and draw them if relevant
-    for (int i = 0; i < cloud.vertices.getVertexCount(); i++)
+    for (int i = 0; i < cloud.vertices.getVertexCount(); i += pointCloudSamples)
     {
       PVector v = cloud.vertices.getVertex(i);
 
       // skip if not relevant
-      if (v.z >= sliceStart && v.z <= sliceEnd) continue;
+      if (!(v.z >= sliceStart && v.z <= sliceEnd)) continue;
 
       // map and draw point
-      float mx = map(v.x, -d.x, d.x, 0, outputWidth);
-      float my = map(v.y, -d.y, d.y, 0, outputHeight);
+      float mx = map(v.x, d.x * -0.5, d.x * 0.5, 0, outputWidth);
+      float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, outputHeight);
 
-      ellipse(mm(mx), mm(my), pointRadius, pointRadius);
+      pdf.ellipse(mm(mx), mm(my), mm(pointRadius), mm(pointRadius));
     }
+  }
+
+  private void cut(PGraphicsPDF pdf)
+  {
+    pdf.noFill();
+    pdf.stroke(0);
+    pdf.strokeWeight(0.1f);
+  }
+
+  private void engrave(PGraphicsPDF pdf)
+  {
+    pdf.fill(0);
+    pdf.noStroke();
   }
 
   public void render(PGraphics g)
   {
     PVector d = pointCloud.dimensions;
-    float sliceSize = d.z / samples;
+    float sliceSize = d.z / slices;
 
-    for (int i = 0; i < samples; i++)
+    for (int i = 0; i < slices; i++)
     {
       g.push();
       g.translate(0, 0, -0.5 * d.z + (sliceSize * .5) + (sliceSize * i));

@@ -61,6 +61,13 @@ void showInfo()
   PVector d = pointCloud.dimensions;
   box(d.x, d.y, d.z);
 
+  stroke(255, 100, 255);
+  line(-0.5 * d.x, 0, 0, 0.5 * d.x, 0, 0);
+  stroke(255, 255, 100);
+  line(0, -0.5 * d.y, 0, 0, 0.5 * d.y, 0);
+  stroke(100, 255, 255);
+  line(0, 0, -0.5 * d.z, 0, 0, 0.5 * d.z);
+
   cam.beginHUD();
   cp5.draw();
   cam.endHUD();
