@@ -10,7 +10,7 @@ float startDepth = 400;
 
 LaserCutExporter exporter;
 
-boolean displayResult = false;
+boolean previewMode = false;
 
 void setup()
 {
@@ -47,7 +47,7 @@ void draw()
 {
   background(0);
 
-  if (!displayResult)
+  if (!previewMode)
   {
     visusalizer.render(this.g, pointCloud);
     exporter.render(this.g);

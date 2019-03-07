@@ -62,10 +62,10 @@ void setupUI()
     ;
 
   h += 40;
-  cp5.addToggle("displayResult")
+  cp5.addToggle("previewMode")
     .setPosition(10, h)
     .setSize(100, 20)
-    .setCaptionLabel("Display Result");
+    .setCaptionLabel("Preview Mode");
 
   uiHeight = h + 100;
 
