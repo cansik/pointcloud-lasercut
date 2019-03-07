@@ -22,7 +22,7 @@ void setupUI()
 
   int h = 10;
   cp5.addSlider("slices", 10, 150, 10, h, 100, 20)
-    .setRange(1, 15)
+    .setRange(1, 20)
     .setLabel("Slices")
     .setValue(exporter.slices)
     .plugTo(exporter);
