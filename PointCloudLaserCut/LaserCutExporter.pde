@@ -30,12 +30,6 @@ class LaserCutExporter
     {
       println("exporting slice " + i + "...");
 
-      /*
-       PGraphicsPDF pdf = (PGraphicsPDF)beginRecord(PDF, filePath + "tree_slice_" + i + ".pdf");
-       pdf.setSize(round(mm(900)), round(mm(600)));
-       pdf.beginDraw();
-       */
-
       PGraphics img = createGraphics(round(mm(outputWidth)), round(mm(outputHeight)));
 
       float startSlice = sliceSize * i + (d.z * -0.5);
@@ -46,10 +40,6 @@ class LaserCutExporter
       img.endDraw();
 
       img.save(filePath + "tree_slice_" + i + ".png");
-
-      /*
-      endRecord();
-       */
     }
 
     println("cloud exported!");
@@ -60,9 +50,6 @@ class LaserCutExporter
   {
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
     PVector t = PVector.div(cloud.translation, cloud.scale);
-
-    cut(g);
-    //g.rect(0, 0, mm(outputWidth), mm(outputHeight));
 
     engrave(g);
 
