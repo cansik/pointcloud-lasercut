@@ -6,13 +6,14 @@ class LaserCutExporter
   int pointCloudSamples = 1;
 
   // mm
-  int outputHeight = 230;
-  int outputWidth = round(outputHeight * 0.72752184);
+  int outputMax = 230;
   float pointRadius = 0.1;
 
   PointCloud cloud;
 
   boolean exporting = false;
+  private int outputHeight = 0;
+  private int outputWidth = 0;
 
   public LaserCutExporter(PointCloud cloud)
   {
@@ -23,6 +24,19 @@ class LaserCutExporter
   {
     exporter.exporting = true;
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
+
+    // calculate export scale
+    if (d.x > d.y) {
+      // x is size
+      outputWidth = outputMax;
+      outputHeight = round(outputMax * (d.y / d.x));
+    } else {
+      // y is size
+      outputHeight = outputMax;
+      outputWidth = round(outputMax * (d.x / d.y));
+    }
+    
+    println("Output: w: " + outputWidth + " h: " + outputHeight);
 
     float sliceSize = d.z / slices;
 
