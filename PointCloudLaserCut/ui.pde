@@ -31,13 +31,17 @@ void setupUI()
   cp5.addSlider("pointRadius", 10, 150, 10, h, 100, 20)
     .setRange(0.05, 1.0)
     .setLabel("Point Radius")
+    .setNumberOfTickMarks(20)
+    .showTickMarks(false)
     .setValue(exporter.pointRadius)
     .plugTo(exporter);
 
   h += 25;
   cp5.addSlider("outputMax", 10, 150, 10, h, 100, 20)
-    .setRange(100, 1280)
+    .setRange(100, 1500)
     .setLabel("Max (mm)")
+    .setNumberOfTickMarks(100)
+    .showTickMarks(false)
     .setValue(exporter.outputMax)
     .plugTo(exporter);
 
