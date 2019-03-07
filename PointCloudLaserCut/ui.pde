@@ -46,6 +46,14 @@ void setupUI()
     .plugTo(exporter);
 
   h += 30;
+  cp5.addButton("generate")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Generate Slices")
+    ;
+
+  h += 30;
   cp5.addButton("export")
     .setValue(100)
     .setPosition(10, h)
@@ -53,18 +61,31 @@ void setupUI()
     .setCaptionLabel("Export Slices")
     ;
 
+  h += 40;
+  cp5.addToggle("displayResult")
+    .setPosition(10, h)
+    .setSize(100, 20)
+    .setCaptionLabel("Display Result");
+
   uiHeight = h + 100;
 
   isUIInitialized = true;
 }
 
+void generate(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.generating) return;
+
+  exporter.generate();
+}
+
 void export(int value)
 {
   if (!isUIInitialized) return;
-  if (exporter.exporting) return;
+  if (exporter.generating) return;
 
   exporter.export(sketchPath("export/"));
-  println("exported cloud");
 }
 
 public String formatTime(long millis)

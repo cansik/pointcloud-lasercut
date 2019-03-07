@@ -11,9 +11,12 @@ class LaserCutExporter
 
   PointCloud cloud;
 
-  boolean exporting = false;
+  boolean generating = false;
   private int outputHeight = 0;
   private int outputWidth = 0;
+
+  float sliceDepth = 10;
+  PGraphics[] images = new PGraphics[0];
 
   public LaserCutExporter(PointCloud cloud)
   {
@@ -22,7 +25,18 @@ class LaserCutExporter
 
   public void export(String filePath)
   {
-    exporter.exporting = true;
+    for (int i = 0; i < images.length; i++)
+    {
+      PImage img = images[i];
+      img.save(filePath + "tree_slice_" + i + ".png");
+    }
+
+    println("cloud exported!");
+  }
+
+  public void generate()
+  {
+    exporter.generating = true;
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
 
     // calculate export scale
@@ -35,14 +49,16 @@ class LaserCutExporter
       outputHeight = outputMax;
       outputWidth = round(outputMax * (d.x / d.y));
     }
-    
+
     println("Output: w: " + outputWidth + " h: " + outputHeight);
 
     float sliceSize = d.z / slices;
 
+    images = new PGraphics[slices];
+
     for (int i = 0; i < slices; i++)
     {
-      println("exporting slice " + i + "...");
+      println("generating slice " + i + "...");
 
       PGraphics img = createGraphics(round(mm(outputWidth)), round(mm(outputHeight)));
 
@@ -53,11 +69,12 @@ class LaserCutExporter
       exportSlice(img, startSlice, endSlice);
       img.endDraw();
 
-      img.save(filePath + "tree_slice_" + i + ".png");
+      img.loadPixels();
+      images[i] = img;
     }
 
-    println("cloud exported!");
-    exporter.exporting = false;
+    println("cloud generated");
+    exporter.generating = false;
   }
 
   private void exportSlice(PGraphics g, float sliceStart, float sliceEnd)
@@ -114,6 +131,27 @@ class LaserCutExporter
       g.strokeWeight(2);
       g.stroke(100, 100, 255);
       g.box(d.x, d.y, sliceSize);
+      g.pop();
+    }
+  }
+
+  public void display(PGraphics g)
+  { 
+    g.background(200);
+
+    float slizeMax = sliceDepth * images.length;
+
+    for (int i = 0; i < images.length; i++)
+    {
+      PGraphics img = images[i];
+
+      g.push();
+
+      g.translate(0, 0, (slizeMax * -0.5) + (i * sliceDepth));
+      g.stroke(255, 100, 100);
+      g.textureMode(IMAGE);
+      g.texture(img);
+      g.box(img.width, img.height, sliceDepth);
       g.pop();
     }
   }

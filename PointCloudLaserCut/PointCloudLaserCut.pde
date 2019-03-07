@@ -10,6 +10,8 @@ float startDepth = 400;
 
 LaserCutExporter exporter;
 
+boolean displayResult = false;
+
 void setup()
 {
   size(1280, 720, P3D);
@@ -18,7 +20,7 @@ void setup()
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/forest-blk360_centered.ply");
+  pointCloudFile = sketchPath("data/florian.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);
@@ -43,17 +45,23 @@ void setup()
 
 void draw()
 {
-  visusalizer.render(this.g, pointCloud);
+  background(0);
 
-  exporter.render(this.g);
+  if (!displayResult)
+  {
+    visusalizer.render(this.g, pointCloud);
+    exporter.render(this.g);
+    showGuides();
+  } else
+  {
+    exporter.display(this.g);
+  }
+
   showInfo();
 }
 
-void showInfo()
+void showGuides()
 {
-  String infoText = "Point Cloud Animation -  FPS " + nf(frameRate);
-  surface.setTitle(infoText);
-
   // draw debug box
   noFill();
   strokeWeight(2);
@@ -67,6 +75,12 @@ void showInfo()
   line(0, -0.5 * d.y, 0, 0, 0.5 * d.y, 0);
   stroke(100, 255, 255);
   line(0, 0, -0.5 * d.z, 0, 0, 0.5 * d.z);
+}
+
+void showInfo()
+{
+  String infoText = "Point Cloud Animation -  FPS " + nf(frameRate);
+  surface.setTitle(infoText);
 
   cam.beginHUD();
   cp5.draw();
