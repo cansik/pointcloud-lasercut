@@ -15,7 +15,7 @@ void setup()
   size(1280, 720, P3D);
   pixelDensity(2);
 
-  surface.setTitle("Point Cloud Animation Creator");
+  surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
   pointCloudFile = sketchPath("data/forest-blk360_centered.ply");

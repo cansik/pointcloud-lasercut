@@ -27,12 +27,26 @@ void setupUI()
     .setValue(exporter.slices)
     .plugTo(exporter);
 
+  h += 25;
+  cp5.addSlider("pointRadius", 10, 150, 10, h, 100, 20)
+    .setRange(0.05, 1.0)
+    .setLabel("Point Radius")
+    .setValue(exporter.pointRadius)
+    .plugTo(exporter);
+
+  h += 25;
+  cp5.addSlider("outputMax", 10, 150, 10, h, 100, 20)
+    .setRange(100, 1280)
+    .setLabel("Max (mm)")
+    .setValue(exporter.outputMax)
+    .plugTo(exporter);
+
   h += 30;
   cp5.addButton("export")
     .setValue(100)
     .setPosition(10, h)
     .setSize(200, 22)
-    .setCaptionLabel("Export")
+    .setCaptionLabel("Export Slices")
     ;
 
   uiHeight = h + 100;
