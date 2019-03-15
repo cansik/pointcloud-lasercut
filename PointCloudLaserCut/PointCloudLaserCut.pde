@@ -47,15 +47,9 @@ void draw()
 {
   background(0);
 
-  if (!previewMode)
-  {
-    visusalizer.render(this.g, pointCloud);
-    exporter.render(this.g);
-    showGuides();
-  } else
-  {
-    exporter.display(this.g);
-  }
+  visusalizer.render(this.g, pointCloud);
+  exporter.render(this.g);
+  showGuides();
 
   showInfo();
 }

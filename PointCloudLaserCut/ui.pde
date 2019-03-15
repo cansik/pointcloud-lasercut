@@ -37,6 +37,15 @@ void setupUI()
     .plugTo(exporter);
 
   h += 25;
+  cp5.addSlider("pointCloudSamples", 10, 150, 10, h, 100, 20)
+    .setRange(1, 100)
+    .setLabel("Samplerate")
+    .setNumberOfTickMarks(99)
+    .showTickMarks(false)
+    .setValue(exporter.pointCloudSamples)
+    .plugTo(exporter);
+
+  h += 25;
   cp5.addSlider("outputMax", 10, 150, 10, h, 100, 20)
     .setRange(100, 1500)
     .setLabel("Max (mm)")
@@ -46,19 +55,19 @@ void setupUI()
     .plugTo(exporter);
 
   h += 30;
-  cp5.addButton("generate")
+  cp5.addButton("exportBitmap")
     .setValue(100)
     .setPosition(10, h)
     .setSize(200, 22)
-    .setCaptionLabel("Generate Slices")
+    .setCaptionLabel("Export Bitmap")
     ;
 
   h += 30;
-  cp5.addButton("export")
+  cp5.addButton("exportPdf")
     .setValue(100)
     .setPosition(10, h)
     .setSize(200, 22)
-    .setCaptionLabel("Export Slices")
+    .setCaptionLabel("Export PDF")
     ;
 
   h += 40;
@@ -72,20 +81,20 @@ void setupUI()
   isUIInitialized = true;
 }
 
-void generate(int value)
+void exportBitmap(int value)
 {
   if (!isUIInitialized) return;
   if (exporter.generating) return;
 
-  exporter.generate();
+  exporter.generate(sketchPath("export/"), ExportType.Bitmap);
 }
 
-void export(int value)
+void exportPdf(int value)
 {
   if (!isUIInitialized) return;
   if (exporter.generating) return;
 
-  exporter.export(sketchPath("export/"));
+  exporter.generate(sketchPath("export/"), ExportType.Pdf);
 }
 
 public String formatTime(long millis)

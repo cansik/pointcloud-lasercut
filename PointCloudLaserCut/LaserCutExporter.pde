@@ -16,25 +16,13 @@ class LaserCutExporter
   private int outputWidth = 0;
 
   float sliceDepth = 10;
-  PGraphics[] images = new PGraphics[0];
 
   public LaserCutExporter(PointCloud cloud)
   {
     this.cloud = cloud;
   }
 
-  public void export(String filePath)
-  {
-    for (int i = 0; i < images.length; i++)
-    {
-      PImage img = images[i];
-      img.save(filePath + "tree_slice_" + i + ".png");
-    }
-
-    println("cloud exported!");
-  }
-
-  public void generate()
+  public void generate(String filePath, ExportType exportType)
   {
     exporter.generating = true;
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
@@ -54,35 +42,31 @@ class LaserCutExporter
 
     float sliceSize = d.z / slices;
 
-    images = new PGraphics[slices];
-
     for (int i = 0; i < slices; i++)
     {
       println("generating slice " + i + "...");
 
-      PGraphics img = createGraphics(round(mm(outputWidth)), round(mm(outputHeight)));
+      ExportImage img = createExportImage(exportType, round(mm(outputWidth)), round(mm(outputHeight)));
 
       float startSlice = sliceSize * i + (d.z * -0.5);
       float endSlice = sliceSize * (i + 1) + (d.z * -0.5);
 
       img.beginDraw();
-      exportSlice(img, startSlice, endSlice);
+      createSlice(img, startSlice, endSlice);
       img.endDraw();
 
-      img.loadPixels();
-      images[i] = img;
+      println("exporting slice " + i + "...");
+      img.save(filePath + "slice_" + i + "." + img.getExtension());
     }
 
-    println("cloud generated");
+    println("cloud exported");
     exporter.generating = false;
   }
 
-  private void exportSlice(PGraphics g, float sliceStart, float sliceEnd)
+  private void createSlice(ExportImage g, float sliceStart, float sliceEnd)
   {
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
     PVector t = PVector.div(cloud.translation, cloud.scale);
-
-    engrave(g);
 
     // go through all vertices and draw them if relevant
     for (int i = 0; i < cloud.vertices.getVertexCount(); i += pointCloudSamples)
@@ -99,21 +83,8 @@ class LaserCutExporter
       float mx = map(v.x, d.x * -0.5, d.x * 0.5, 0, outputWidth);
       float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, outputHeight);
 
-      g.ellipse(mm(mx), mm(my), mm(pointRadius), mm(pointRadius));
+      g.drawPoint(mm(mx), mm(my), mm(pointRadius));
     }
-  }
-
-  private void cut(PGraphics g)
-  {
-    g.noFill();
-    g.stroke(0);
-    g.strokeWeight(0.1f);
-  }
-
-  private void engrave(PGraphics g)
-  {
-    g.fill(0);
-    g.noStroke();
   }
 
   public void render(PGraphics g)
@@ -131,27 +102,6 @@ class LaserCutExporter
       g.strokeWeight(2);
       g.stroke(100, 100, 255);
       g.box(d.x, d.y, sliceSize);
-      g.pop();
-    }
-  }
-
-  public void display(PGraphics g)
-  { 
-    g.background(200);
-
-    float slizeMax = sliceDepth * images.length;
-
-    for (int i = 0; i < images.length; i++)
-    {
-      PGraphics img = images[i];
-
-      g.push();
-
-      g.translate(0, 0, (slizeMax * -0.5) + (i * sliceDepth));
-      g.stroke(255, 100, 100);
-      g.textureMode(IMAGE);
-      g.texture(img);
-      g.box(img.width, img.height, sliceDepth);
       g.pop();
     }
   }
