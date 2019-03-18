@@ -9,7 +9,7 @@ class ExportPdf extends ExportImage {
     g = (PGraphicsPDF)beginRecord(PDF, tempPath);
     g.setSize(w, h);
   }
-  
+
   String getExtension() {
     return "pdf";
   }
@@ -17,6 +17,8 @@ class ExportPdf extends ExportImage {
   void beginDraw() {
     g.beginDraw();
     cut();
+
+    g.rect(0, 0, w, h);
   }
 
   void drawPoint(float x, float y, float diameter) {
@@ -37,7 +39,7 @@ class ExportPdf extends ExportImage {
   {
     g.noFill();
     g.stroke(0);
-    g.strokeWeight(0.1f);
+    g.strokeWeight(0.01f);
   }
 
   private void engrave()

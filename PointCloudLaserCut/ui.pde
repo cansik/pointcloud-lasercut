@@ -47,9 +47,9 @@ void setupUI()
 
   h += 25;
   cp5.addSlider("outputMax", 10, 150, 10, h, 100, 20)
-    .setRange(100, 1500)
+    .setRange(10, 1200)
     .setLabel("Max (mm)")
-    .setNumberOfTickMarks(100)
+    .setNumberOfTickMarks(1500)
     .showTickMarks(false)
     .setValue(exporter.outputMax)
     .plugTo(exporter);
