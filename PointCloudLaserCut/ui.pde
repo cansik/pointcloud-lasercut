@@ -70,11 +70,21 @@ void setupUI()
     .setCaptionLabel("Export PDF")
     ;
 
-  h += 40;
-  cp5.addToggle("previewMode")
+  h += 30;
+  cp5.addButton("exportSvg")
+    .setValue(100)
     .setPosition(10, h)
-    .setSize(100, 20)
-    .setCaptionLabel("Preview Mode");
+    .setSize(200, 22)
+    .setCaptionLabel("Export SVG")
+    ;
+
+  /*
+  h += 40;
+   cp5.addToggle("previewMode")
+   .setPosition(10, h)
+   .setSize(100, 20)
+   .setCaptionLabel("Preview Mode");
+   */
 
   uiHeight = h + 100;
 
@@ -95,6 +105,14 @@ void exportPdf(int value)
   if (exporter.generating) return;
 
   exporter.generate(sketchPath("export/"), ExportType.Pdf);
+}
+
+void exportSvg(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.generating) return;
+
+  exporter.generate(sketchPath("export/"), ExportType.Svg);
 }
 
 public String formatTime(long millis)

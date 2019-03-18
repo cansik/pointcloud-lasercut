@@ -6,7 +6,7 @@ abstract class ExportImage {
     this.w = w;
     this.h = h;
   }
-  
+
   abstract String getExtension();
 
   abstract void beginDraw();
@@ -20,7 +20,8 @@ abstract class ExportImage {
 
 enum ExportType {
   Bitmap, 
-    Pdf
+    Pdf, 
+    Svg
 }
 
 ExportImage createExportImage(ExportType exportType, int w, int h) {
@@ -29,6 +30,9 @@ ExportImage createExportImage(ExportType exportType, int w, int h) {
 
   if (exportType == ExportType.Pdf)
     return new ExportPdf(w, h);
+
+  if (exportType == ExportType.Svg)
+    return new ExportSvg(w, h);
 
   return null;
 }
