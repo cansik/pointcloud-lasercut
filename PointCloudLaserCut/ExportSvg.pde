@@ -2,6 +2,7 @@ import org.jfree.graphics2d.svg.*;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.BasicStroke;
+import java.awt.geom.Ellipse2D;
 
 class ExportSvg extends ExportImage {
   SVGGraphics2D g;
@@ -26,8 +27,8 @@ class ExportSvg extends ExportImage {
   }
 
   void drawPoint(float x, float y, float diameter) {
-    // caution: can be very inaccurate!
-    g.drawOval(round(x), round(y), round(diameter), round(diameter));
+    //new Line2D.Float(x1, y1, x2, y2);
+    g.draw(new Ellipse2D.Float(x, y, diameter, diameter));
   }
 
   void endDraw() {
