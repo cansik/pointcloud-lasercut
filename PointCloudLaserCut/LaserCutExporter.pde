@@ -52,10 +52,10 @@ class LaserCutExporter
       float endSlice = sliceSize * (i + 1) + (d.z * -0.5);
 
       img.beginDraw();
-      createSlice(img, startSlice, endSlice);
+      int pointCount = createSlice(img, startSlice, endSlice);
       img.endDraw();
 
-      println("exporting slice " + i + "...");
+      println("exporting slice " + i + "(" + pointCount + " pts)...");
       img.save(filePath + "slice_" + i + "." + img.getExtension());
     }
 
@@ -63,10 +63,12 @@ class LaserCutExporter
     exporter.generating = false;
   }
 
-  private void createSlice(ExportImage g, float sliceStart, float sliceEnd)
+  private int createSlice(ExportImage g, float sliceStart, float sliceEnd)
   {
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
     PVector t = PVector.div(cloud.translation, cloud.scale);
+    
+    int pointCounter = 0;
 
     // go through all vertices and draw them if relevant
     for (int i = 0; i < cloud.vertices.getVertexCount(); i += pointCloudSamples)
@@ -84,7 +86,10 @@ class LaserCutExporter
       float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, outputHeight);
 
       g.drawPoint(mm(mx), mm(my), mm(pointRadius));
+      pointCounter++;
     }
+    
+    return pointCounter;
   }
 
   public void render(PGraphics g)
