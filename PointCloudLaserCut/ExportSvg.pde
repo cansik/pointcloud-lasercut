@@ -50,13 +50,13 @@ class ExportSvg extends ExportImage {
   {
     g.setPaint(null);
     g.setColor(Color.black);
-    g.setStroke(new BasicStroke(0.1f));
+    g.setStroke(new BasicStroke(mm(0.1f)));
   }
 
   private void engrave()
   {
     g.setPaint(Color.black);
     g.setColor(Color.black);
-    g.setStroke(new BasicStroke(0.1f));
+    g.setStroke(new BasicStroke(mm(0.1f)));
   }
 }
