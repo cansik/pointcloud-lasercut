@@ -51,7 +51,41 @@ void draw()
   exporter.render(this.g);
   showGuides();
 
+  if (exporter.exporting)
+  {
+    showExporting();
+  }
+
   showInfo();
+}
+
+void showExporting() {
+  cam.beginHUD();
+  fill(55, 150);
+  noStroke();
+  rect(0, 0, width, height);
+
+  textAlign(CENTER, CENTER);
+  textSize(20);
+
+  fill(255);
+  text("exporting " + round(exporter.exportProgress * 100) + "%", width / 2, height / 2);
+
+  // loader info
+  noFill();
+  stroke(255);
+  strokeWeight(10.0);
+  drawArc(2.0, 200, PI, HALF_PI);
+  drawArc(5.0, 250, QUARTER_PI * 2, QUARTER_PI);
+  drawArc(3.0, 300, PI * 1.5, HALF_PI);
+  strokeWeight(1.0);
+  cam.endHUD();
+}
+
+void drawArc(float speed, float radius, float start, float lenght)
+{
+  float delta = radians(frameCount % 360 * speed);
+  arc(width / 2, height / 2, radius, radius, start + delta, start + lenght + delta, OPEN);
 }
 
 void showGuides()

@@ -1,6 +1,6 @@
-import processing.pdf.*; //<>//
+import processing.pdf.*; //<>// //<>//
 
-class LaserCutExporter
+class LaserCutExporter implements Runnable
 {
   int slices = 5;
   int pointCloudSamples = 1;
@@ -11,20 +11,39 @@ class LaserCutExporter
 
   PointCloud cloud;
 
-  boolean generating = false;
+  volatile boolean exporting = false;
   private int outputHeight = 0;
   private int outputWidth = 0;
 
   float sliceDepth = 10;
+
+  private Thread exportThread;
+  private String _filePath;
+  private ExportType _exportType;
+
+  volatile float exportProgress = 0.0;
 
   public LaserCutExporter(PointCloud cloud)
   {
     this.cloud = cloud;
   }
 
+  public void generateAsync(String filePath, ExportType exportType) {
+    _filePath = filePath;
+    _exportType = exportType;
+
+    exportThread = new Thread(this);
+    exportThread.start();
+  }
+
+  public void run() {
+    generate(_filePath, _exportType);
+  }
+
   public void generate(String filePath, ExportType exportType)
   {
-    exporter.generating = true;
+    exportProgress = 0.0;
+    exporter.exporting = true;
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
 
     // calculate export scale
@@ -57,17 +76,20 @@ class LaserCutExporter
 
       println("exporting slice " + i + "(" + pointCount + " pts)...");
       img.save(filePath + "slice_" + i + "." + img.getExtension());
+
+      exportProgress = (float)i / slices;
     }
 
+    exportProgress = 1.0;
     println("cloud exported");
-    exporter.generating = false;
+    exporter.exporting = false;
   }
 
   private int createSlice(ExportImage g, float sliceStart, float sliceEnd)
   {
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
     PVector t = PVector.div(cloud.translation, cloud.scale);
-    
+
     int pointCounter = 0;
 
     // go through all vertices and draw them if relevant
@@ -88,7 +110,7 @@ class LaserCutExporter
       g.drawPoint(mm(mx), mm(my), mm(pointRadius));
       pointCounter++;
     }
-    
+
     return pointCounter;
   }
 

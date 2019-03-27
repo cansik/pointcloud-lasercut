@@ -94,25 +94,25 @@ void setupUI()
 void exportBitmap(int value)
 {
   if (!isUIInitialized) return;
-  if (exporter.generating) return;
+  if (exporter.exporting) return;
 
-  exporter.generate(sketchPath("export/"), ExportType.Bitmap);
+  exporter.generateAsync(sketchPath("export/"), ExportType.Bitmap);
 }
 
 void exportPdf(int value)
 {
   if (!isUIInitialized) return;
-  if (exporter.generating) return;
+  if (exporter.exporting) return;
 
-  exporter.generate(sketchPath("export/"), ExportType.Pdf);
+  exporter.generateAsync(sketchPath("export/"), ExportType.Pdf);
 }
 
 void exportSvg(int value)
 {
   if (!isUIInitialized) return;
-  if (exporter.generating) return;
+  if (exporter.exporting) return;
 
-  exporter.generate(sketchPath("export/"), ExportType.Svg);
+  exporter.generateAsync(sketchPath("export/"), ExportType.Svg);
 }
 
 public String formatTime(long millis)
