@@ -78,13 +78,29 @@ void setupUI()
     .setCaptionLabel("Export SVG")
     ;
 
-  /*
+
   h += 40;
-   cp5.addToggle("previewMode")
-   .setPosition(10, h)
-   .setSize(100, 20)
-   .setCaptionLabel("Preview Mode");
-   */
+  cp5.addButton("generatePreview")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Generate Preview")
+    ;
+
+  h += 30;
+  cp5.addSlider("plateSpace", 10, 150, 10, h, 100, 20)
+    .setRange(0, 50)
+    .setLabel("Plate Space (mm)")
+    .setNumberOfTickMarks(51)
+    .showTickMarks(false)
+    .setValue(previewVisualizer.plateSpace)
+    .plugTo(previewVisualizer);
+
+  h += 30;
+  cp5.addToggle("previewMode")
+    .setPosition(10, h)
+    .setSize(100, 20)
+    .setCaptionLabel("Preview Mode");
 
   uiHeight = h + 100;
 
@@ -113,6 +129,13 @@ void exportSvg(int value)
   if (exporter.exporting) return;
 
   exporter.generateAsync(sketchPath("export/"), ExportType.Svg);
+}
+
+void generatePreview(int value)
+{
+  if (!isUIInitialized) return;
+
+  previewVisualizer.generatePreview(pointCloud);
 }
 
 public String formatTime(long millis)

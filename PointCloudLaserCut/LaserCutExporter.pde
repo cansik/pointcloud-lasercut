@@ -40,22 +40,33 @@ class LaserCutExporter implements Runnable
     generate(_filePath, _exportType);
   }
 
-  public void generate(String filePath, ExportType exportType)
-  {
-    exportProgress = 0.0;
-    exporter.exporting = true;
-    PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
+  public PVector getSliceSize(PVector d) {
+    PVector result = new PVector();
 
     // calculate export scale
     if (d.x > d.y) {
       // x is size
-      outputWidth = outputMax;
-      outputHeight = round(outputMax * (d.y / d.x));
+      result.x = outputMax;
+      result.y = round(outputMax * (d.y / d.x));
     } else {
       // y is size
-      outputHeight = outputMax;
-      outputWidth = round(outputMax * (d.x / d.y));
+      result.y = outputMax;
+      result.x = round(outputMax * (d.x / d.y));
     }
+
+    return result;
+  }
+
+  public void generate(String filePath, ExportType exportType)
+  {
+    exportProgress = 0.0;
+    exporter.exporting = true;
+
+    PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
+
+    PVector sliceDimension = getSliceSize(d);
+    outputWidth = (int)sliceDimension.x;
+    outputHeight = (int)sliceDimension.y;
 
     println("Output: w: " + outputWidth + " h: " + outputHeight);
 
@@ -104,8 +115,8 @@ class LaserCutExporter implements Runnable
       if (!(v.z >= sliceStart && v.z <= sliceEnd)) continue;
 
       // map and draw point
-      float mx = map(v.x, d.x * -0.5, d.x * 0.5, 0, outputWidth);
-      float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, outputHeight);
+      float mx = map(v.x, d.x * -0.5, d.x * 0.5, 0, px(g.w));
+      float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, px(g.h));
 
       g.drawPoint(mm(mx), mm(my), mm(pointRadius));
       pointCounter++;
