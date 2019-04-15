@@ -15,7 +15,8 @@ boolean previewMode = false;
 
 void setup()
 {
-  size(1280, 720, P3D);
+  size(1400, 900, P3D);
+  //fullScreen(P3D);
   pixelDensity(2);
 
   surface.setTitle("Point Cloud Slicer");

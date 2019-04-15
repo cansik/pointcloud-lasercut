@@ -54,7 +54,7 @@ class PointCloud
 
     // scale dimensions
     dimensions.mult(scale);
-    
+
     println("proportions: " + dimensions.x / dimensions.y);
   }
 
@@ -80,21 +80,37 @@ class PointCloud
     float[] z = vertex.property(FLOAT32, "z");
 
     // colors
-    byte[] r = vertex.property(UINT8, "red");
-    byte[] g = vertex.property(UINT8, "green");
-    byte[] b = vertex.property(UINT8, "blue");
+    byte[] r = new byte[0];
+    byte[] g = new byte[0];
+    byte[] b = new byte[0];
+    boolean colorLoaded = false;
+
+    try {
+      r = vertex.property(UINT8, "red");
+      g = vertex.property(UINT8, "green");
+      b = vertex.property(UINT8, "blue");
+
+      colorLoaded = true;
+    } 
+    catch(Exception ex) {
+      println("no color information!");
+    }
 
     vertices = createShape();
     vertices.beginShape(POINTS);
 
     for (int i = 0; i < x.length; i++)
     {
-      int rv = r[i] & 0xFF;
-      int gv = g[i] & 0xFF;
-      int bv = b[i] & 0xFF;
-
       vertices.strokeWeight(1.0f);
-      vertices.stroke(rv, gv, bv);
+
+      if (colorLoaded) {
+        int rv = r[i] & 0xFF;
+        int gv = g[i] & 0xFF;
+        int bv = b[i] & 0xFF;
+        vertices.stroke(rv, gv, bv);
+      } else {
+        vertices.stroke(255);
+      }
       vertices.vertex(x[i], -y[i], z[i]);
     }
 

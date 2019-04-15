@@ -37,6 +37,14 @@ void setupUI()
     .plugTo(exporter);
 
   h += 25;
+  cp5.addToggle("flipAxis")
+    .setPosition(10, h)
+    .setSize(100, 20)
+    .setValue(exporter.flipAxis)
+    .plugTo(exporter)
+    .setCaptionLabel("Flip Axis");
+
+  h += 45;
   cp5.addSlider("pointCloudSamples", 10, 150, 10, h, 100, 20)
     .setRange(1, 100)
     .setLabel("Samplerate")
@@ -91,7 +99,6 @@ void setupUI()
   cp5.addSlider("plateSpace", 10, 150, 10, h, 100, 20)
     .setRange(0, 50)
     .setLabel("Plate Space (mm)")
-    .setNumberOfTickMarks(51)
     .showTickMarks(false)
     .setValue(previewVisualizer.plateSpace)
     .plugTo(previewVisualizer);

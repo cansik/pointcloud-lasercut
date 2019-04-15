@@ -4,6 +4,7 @@ class LaserCutExporter implements Runnable
 {
   int slices = 5;
   int pointCloudSamples = 1;
+  boolean flipAxis = false;
 
   // mm
   int outputMax = 230;
@@ -78,8 +79,10 @@ class LaserCutExporter implements Runnable
 
       ExportImage img = createExportImage(exportType, round(mm(outputWidth)), round(mm(outputHeight)));
 
-      float startSlice = sliceSize * i + (d.z * -0.5);
-      float endSlice = sliceSize * (i + 1) + (d.z * -0.5);
+      float z = (exporter.flipAxis ? d.x : d.z);
+
+      float startSlice = sliceSize * i + (z * -0.5);
+      float endSlice = sliceSize * (i + 1) + (z * -0.5);
 
       img.beginDraw();
       int pointCount = createSlice(img, startSlice, endSlice);
@@ -112,10 +115,13 @@ class LaserCutExporter implements Runnable
       v.add(t);
 
       // skip if not relevant
-      if (!(v.z >= sliceStart && v.z <= sliceEnd)) continue;
+      float z = (exporter.flipAxis ? v.x : v.z);
+      if (!(z >= sliceStart && z <= sliceEnd)) continue;
 
       // map and draw point
-      float mx = map(v.x, d.x * -0.5, d.x * 0.5, 0, px(g.w));
+      float mx = (exporter.flipAxis ? 
+        map(v.z, d.z * -0.5, d.z * 0.5, 0, px(g.w)): 
+        map(v.x, d.x * -0.5, d.x * 0.5, 0, px(g.w)));
       float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, px(g.h));
 
       g.drawPoint(mm(mx), mm(my), mm(pointRadius));
@@ -128,18 +134,30 @@ class LaserCutExporter implements Runnable
   public void render(PGraphics g)
   {
     PVector d = pointCloud.dimensions;
-    float sliceSize = d.z / slices;
+    float z = (exporter.flipAxis ? d.x : d.z);
+    float sliceSize = z / slices;
 
     for (int i = 0; i < slices; i++)
-    {
+    { 
       g.push();
-      g.translate(0, 0, -0.5 * d.z + (sliceSize * .5) + (sliceSize * i));
+
+      if (exporter.flipAxis) {
+        g.translate(-0.5 * z + (sliceSize * .5) + (sliceSize * i), 0, 0);
+      } else {
+        g.translate(0, 0, -0.5 * z + (sliceSize * .5) + (sliceSize * i));
+      }
 
       // draw sample box
       g.noFill();
       g.strokeWeight(2);
       g.stroke(100, 100, 255);
-      g.box(d.x, d.y, sliceSize);
+
+      if (exporter.flipAxis) {
+        g.box(sliceSize, d.y, d.z);
+      } else {
+        g.box(d.x, d.y, sliceSize);
+      }
+
       g.pop();
     }
   }

@@ -32,9 +32,11 @@ class PreviewVisualizer
     // create images
     for (int i = 0; i < textures.length; i++) {
       ExportTexture tex = new ExportTexture(round(mm(plateWidth)), round(mm(plateHeight)));
+      
+      float z = (exporter.flipAxis ? d.x : d.z);
 
-      float startSlice = sliceSize * i + (d.z * -0.5);
-      float endSlice = sliceSize * (i + 1) + (d.z * -0.5);
+      float startSlice = sliceSize * i + (z * -0.5);
+      float endSlice = sliceSize * (i + 1) + (z * -0.5);
 
       tex.beginDraw();
       int points = exporter.createSlice(tex, startSlice, endSlice);
