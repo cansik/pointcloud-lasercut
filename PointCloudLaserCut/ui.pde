@@ -67,7 +67,7 @@ void setupUI()
     .setValue(100)
     .setPosition(10, h)
     .setSize(200, 22)
-    .setCaptionLabel("Export Bitmap")
+    .setCaptionLabel("Export Bitmaps")
     ;
 
   h += 30;
@@ -86,6 +86,14 @@ void setupUI()
     .setCaptionLabel("Export SVG")
     ;
 
+  h += 30;
+  cp5.addButton("screenShot")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Screenshot")
+    ;
+
 
   h += 40;
   cp5.addButton("generatePreview")
@@ -97,7 +105,7 @@ void setupUI()
 
   h += 30;
   cp5.addSlider("plateSpace", 10, 150, 10, h, 100, 20)
-    .setRange(0, 50)
+    .setRange(0, 500)
     .setLabel("Plate Space (mm)")
     .showTickMarks(false)
     .setValue(previewVisualizer.plateSpace)
@@ -108,6 +116,14 @@ void setupUI()
     .setPosition(10, h)
     .setSize(100, 20)
     .setCaptionLabel("Preview Mode");
+
+  h += 45;
+  cp5.addButton("moveCamera")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Camera")
+    ;
 
   uiHeight = h + 100;
 
@@ -143,6 +159,24 @@ void generatePreview(int value)
   if (!isUIInitialized) return;
 
   previewVisualizer.generatePreview(pointCloud);
+}
+
+void screenShot(int value) {
+  if (!isUIInitialized) return;
+
+  takeScreenshotProposed = true;
+}
+
+int camPlateIndex = 0;
+void moveCamera(int value) {
+  if (!isUIInitialized) return;
+
+  int maxPlates = previewVisualizer.textures.length - 1;
+  float z = previewVisualizer.getPlateZ(maxPlates - camPlateIndex);
+  cam.reset();
+  cam.lookAt(0, 0, z);
+    
+  camPlateIndex = (camPlateIndex + 1) % previewVisualizer.textures.length;
 }
 
 public String formatTime(long millis)

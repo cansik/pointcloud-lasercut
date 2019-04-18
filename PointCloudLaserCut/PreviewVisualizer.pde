@@ -32,7 +32,7 @@ class PreviewVisualizer
     // create images
     for (int i = 0; i < textures.length; i++) {
       ExportTexture tex = new ExportTexture(round(mm(plateWidth)), round(mm(plateHeight)));
-      
+
       float z = (exporter.flipAxis ? d.x : d.z);
 
       float startSlice = sliceSize * i + (z * -0.5);
@@ -63,9 +63,13 @@ class PreviewVisualizer
     g.pop();
   }
 
+  float getPlateZ(int index) {
+    return (index * (plateSpace + plateThickness)) - ((textures.length * (plateSpace + mm(plateThickness))) / 2f);
+  }
+
   private void renderPlate(PGraphics g, int index, PImage texture)
   {
-    float centerPos = (index * (plateSpace + plateThickness)) - ((textures.length * (plateSpace + mm(plateThickness))) / 2f);
+    float centerPos = getPlateZ(index);
     float textZ = (mm(plateThickness) / 2f) + 0.01;
 
     g.push();

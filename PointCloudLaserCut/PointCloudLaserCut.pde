@@ -13,16 +13,18 @@ LaserCutExporter exporter;
 PreviewVisualizer previewVisualizer;
 boolean previewMode = false;
 
+boolean takeScreenshotProposed = false;
+
 void setup()
 {
-  size(1400, 900, P3D);
+  size(900, 900, P3D);
   //fullScreen(P3D);
   pixelDensity(2);
 
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/forest-3-highres_filtered_small.ply");
+  pointCloudFile = sketchPath("data/Tree_1m.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);
@@ -57,6 +59,11 @@ void draw()
     visusalizer.render(this.g, pointCloud);
     exporter.render(this.g);
     showGuides();
+  }
+
+  if (takeScreenshotProposed) {
+    takeScreenshotProposed = false;
+    saveFrame("screenshots/" + "slice_" + camPlateIndex + "_" + frameCount + ".png");
   }
 
   if (exporter.exporting)
