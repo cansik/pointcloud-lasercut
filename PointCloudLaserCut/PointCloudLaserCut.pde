@@ -8,6 +8,8 @@ PointCloud pointCloud;
 String pointCloudFile = "";
 float startDepth = 400;
 
+int exportResolution = 1;
+
 LaserCutExporter exporter;
 
 PreviewVisualizer previewVisualizer;

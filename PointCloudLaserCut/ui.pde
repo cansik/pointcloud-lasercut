@@ -62,6 +62,14 @@ void setupUI()
     .setValue(exporter.outputMax)
     .plugTo(exporter);
 
+  h += 25;
+  cp5.addSlider("exportResolution", 10, 150, 10, h, 100, 20)
+    .setRange(1.0, 4.0)
+    .setLabel("Export Resolution")
+    .setNumberOfTickMarks(4)
+    .showTickMarks(false)
+    .setValue(exportResolution);
+
   h += 30;
   cp5.addButton("exportBitmap")
     .setValue(100)
@@ -135,7 +143,7 @@ void exportBitmap(int value)
   if (!isUIInitialized) return;
   if (exporter.exporting) return;
 
-  exporter.generateAsync(sketchPath("export/"), ExportType.Bitmap);
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.Bitmap);
 }
 
 void exportPdf(int value)
@@ -143,7 +151,7 @@ void exportPdf(int value)
   if (!isUIInitialized) return;
   if (exporter.exporting) return;
 
-  exporter.generateAsync(sketchPath("export/"), ExportType.Pdf);
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.Pdf);
 }
 
 void exportSvg(int value)
@@ -151,7 +159,7 @@ void exportSvg(int value)
   if (!isUIInitialized) return;
   if (exporter.exporting) return;
 
-  exporter.generateAsync(sketchPath("export/"), ExportType.Svg);
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.Svg);
 }
 
 void generatePreview(int value)
@@ -175,7 +183,7 @@ void moveCamera(int value) {
   float z = previewVisualizer.getPlateZ(maxPlates - camPlateIndex);
   cam.reset();
   cam.lookAt(0, 0, z);
-    
+
   camPlateIndex = (camPlateIndex + 1) % previewVisualizer.textures.length;
 }
 

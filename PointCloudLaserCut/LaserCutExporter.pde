@@ -21,6 +21,7 @@ class LaserCutExporter implements Runnable
   private Thread exportThread;
   private String _filePath;
   private ExportType _exportType;
+  private float _imageResolution;
 
   volatile float exportProgress = 0.0;
 
@@ -29,9 +30,11 @@ class LaserCutExporter implements Runnable
     this.cloud = cloud;
   }
 
-  public void generateAsync(String filePath, ExportType exportType) {
+  public void generateAsync(String filePath, float imageResolution, ExportType exportType) {
+
     _filePath = filePath;
     _exportType = exportType;
+    _imageResolution = imageResolution;
 
     exportThread = new Thread(this);
     exportThread.start();
@@ -66,8 +69,8 @@ class LaserCutExporter implements Runnable
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
 
     PVector sliceDimension = getSliceSize(d);
-    outputWidth = (int)sliceDimension.x;
-    outputHeight = (int)sliceDimension.y;
+    outputWidth = (int)(sliceDimension.x * _imageResolution);
+    outputHeight = (int)(sliceDimension.y * _imageResolution);
 
     println("Output: w: " + outputWidth + " h: " + outputHeight);
 
@@ -124,7 +127,7 @@ class LaserCutExporter implements Runnable
         map(v.x, d.x * -0.5, d.x * 0.5, 0, px(g.w)));
       float my = map(v.y, d.y * -0.5, d.y * 0.5, 0, px(g.h));
 
-      g.drawPoint(mm(mx), mm(my), mm(pointRadius));
+      g.drawPoint(mm(mx), mm(my), mm(pointRadius * _imageResolution));
       pointCounter++;
     }
 
