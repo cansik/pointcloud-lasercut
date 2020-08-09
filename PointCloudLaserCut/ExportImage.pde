@@ -21,7 +21,8 @@ abstract class ExportImage {
 enum ExportType {
   Bitmap, 
     Pdf, 
-    Svg
+    Svg, 
+    GCode
 }
 
 ExportImage createExportImage(ExportType exportType, int w, int h) {
@@ -33,6 +34,9 @@ ExportImage createExportImage(ExportType exportType, int w, int h) {
 
   if (exportType == ExportType.Svg)
     return new ExportSvg(w, h);
+
+  if (exportType == ExportType.GCode)
+    return new ExportGCode(w, h);
 
   return null;
 }

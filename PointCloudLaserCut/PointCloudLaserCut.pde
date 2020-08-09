@@ -26,7 +26,7 @@ void setup()
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/Tree_1m.ply");
+  pointCloudFile = sketchPath("data/forest-blk360_centered.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);
@@ -124,7 +124,7 @@ void showGuides()
 
 void showInfo()
 {
-  String infoText = "Point Cloud Animation -  FPS " + nf(frameRate);
+  String infoText = "Point Cloud Animation -  FPS " + round(frameRate);
   surface.setTitle(infoText);
 
   cam.beginHUD();

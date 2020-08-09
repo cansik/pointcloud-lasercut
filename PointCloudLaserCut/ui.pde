@@ -95,6 +95,14 @@ void setupUI()
     ;
 
   h += 30;
+  cp5.addButton("exportGCode")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Export GCode")
+    ;
+
+  h += 30;
   cp5.addButton("screenShot")
     .setValue(100)
     .setPosition(10, h)
@@ -160,6 +168,14 @@ void exportSvg(int value)
   if (exporter.exporting) return;
 
   exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.Svg);
+}
+
+void exportGCode(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.exporting) return;
+
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.GCode);
 }
 
 void generatePreview(int value)
