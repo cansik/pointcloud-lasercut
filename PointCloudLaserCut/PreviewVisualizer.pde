@@ -16,7 +16,7 @@ class PreviewVisualizer
 
   void generatePreview(PointCloud cloud)
   {
-    println("generating preview...");
+    println("generating texture preview...");
     textures = new ExportTexture[exporter.slices];
     PVector d = PVector.div(pointCloud.dimensions, cloud.scale);
 

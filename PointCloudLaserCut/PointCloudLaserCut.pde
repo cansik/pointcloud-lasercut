@@ -26,7 +26,7 @@ void setup()
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/forest-blk360_centered.ply");
+  pointCloudFile = sketchPath("data/Tree_1m.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);

@@ -103,6 +103,14 @@ void setupUI()
     ;
 
   h += 30;
+  cp5.addButton("exportPly")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Export PLY")
+    ;
+
+  h += 30;
   cp5.addButton("screenShot")
     .setValue(100)
     .setPosition(10, h)
@@ -176,6 +184,14 @@ void exportGCode(int value)
   if (exporter.exporting) return;
 
   exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.GCode);
+}
+
+void exportPly(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.exporting) return;
+
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.PLY);
 }
 
 void generatePreview(int value)

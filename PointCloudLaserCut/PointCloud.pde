@@ -116,4 +116,50 @@ class PointCloud
 
     vertices.endShape();
   }
+
+  public void save(String fileName)
+  {
+    Path path = Paths.get(fileName);
+    PLY ply = new PLY();
+
+    PLYElementList vertex = new PLYElementList(vertices.getVertexCount());
+
+    // coordinates
+    float[] x = vertex.addProperty(FLOAT32, "x");
+    float[] y = vertex.addProperty(FLOAT32, "y");
+    float[] z = vertex.addProperty(FLOAT32, "z");
+
+    // colors
+    byte[] r = vertex.addProperty(UINT8, "red");
+    byte[] g = vertex.addProperty(UINT8, "green");
+    byte[] b = vertex.addProperty(UINT8, "blue");
+
+    for (int i = 0; i < vertices.getVertexCount(); i++)
+    {
+      PVector v = vertices.getVertex(i);
+      color c = vertices.getFill(i);
+
+      // coordinates
+      x[i] = v.x;
+      y[i] = -v.y;
+      z[i] = v.z;
+
+      // colors
+      r[i] = (byte)red(c);
+      g[i] = (byte)green(c);
+      b[i] = (byte)blue(c);
+    }
+
+    ply.elements.put("vertex", vertex);
+    //ply.setFormat(ASCII);
+    ply.setFormat(BINARY_LITTLE_ENDIAN);
+
+    try
+    {
+      ply.save(path);
+    } 
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
