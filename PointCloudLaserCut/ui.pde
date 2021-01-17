@@ -129,7 +129,7 @@ void setupUI()
     .setValue(100)
     .setPosition(10, h)
     .setSize(200, 22)
-    .setCaptionLabel("Export GLine")
+    .setCaptionLabel("Export GLine");
 
   h += 30;
   cp5.addButton("exportPly")

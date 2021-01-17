@@ -5,7 +5,7 @@ class ExportGLine extends ExportGCode {
   }
 
   ArrayList<CloudPoint> points = new ArrayList<CloudPoint>();
-  
+
   String getExtension() {
     return "ncline";
   }
@@ -33,17 +33,30 @@ class ExportGLine extends ExportGCode {
 
     while (point != null) {
       point.used = true;
-      
+
       CloudPoint nearest = findNearest(point);
       if (nearest == null) break;
 
       // draw line
       // todo: use line jump if distance is too long
+      float distance = PVector.dist(point, nearest);
+
+      // larger than 30 mm
+      boolean retract = distance > 30;
+
+      if (retract) {
+        moveRapidZ(retractHeight);
+      }
+
       moveRapidXY(nearest.x, nearest.y);
+
+      if (retract) {
+        moveRapidZ(pointDepth);
+      }
 
       point = nearest;
     }
-    
+
     moveRapidZ(retractHeight);
   }
 

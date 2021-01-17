@@ -1,4 +1,4 @@
-import peasy.PeasyCam;
+import peasy.PeasyCam; //<>//
 
 PeasyCam cam;
 
@@ -30,7 +30,7 @@ void setup()
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/plant.ply");
+  pointCloudFile = sketchPath("data/Tree_1m_rot.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);
