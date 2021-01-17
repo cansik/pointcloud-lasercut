@@ -1,4 +1,4 @@
-import peasy.PeasyCam; //<>//
+import peasy.PeasyCam;
 
 PeasyCam cam;
 

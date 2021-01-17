@@ -23,7 +23,8 @@ enum ExportType {
     Pdf, 
     Svg, 
     GCode, 
-    GLine
+    GLine,
+    PLY
 }
 
 ExportImage createExportImage(ExportType exportType, int w, int h) {
@@ -41,6 +42,9 @@ ExportImage createExportImage(ExportType exportType, int w, int h) {
 
   if (exportType == ExportType.GLine)
     return new ExportGLine(w, h);
+
+  if (exportType == ExportType.PLY)
+    return new ExportPLY(w, h);
 
   return null;
 }

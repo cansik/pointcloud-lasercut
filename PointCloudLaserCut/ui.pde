@@ -130,6 +130,13 @@ void setupUI()
     .setPosition(10, h)
     .setSize(200, 22)
     .setCaptionLabel("Export GLine")
+
+  h += 30;
+  cp5.addButton("exportPly")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Export PLY")
     ;
 
   h += 30;
@@ -214,6 +221,14 @@ void exportGLine(int value)
   if (exporter.exporting) return;
 
   exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.GLine);
+}
+
+void exportPly(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.exporting) return;
+
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.PLY);
 }
 
 void generatePreview(int value)
