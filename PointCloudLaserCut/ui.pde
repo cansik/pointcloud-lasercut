@@ -46,9 +46,9 @@ void setupUI()
 
   h += 45;
   cp5.addSlider("pointCloudSamples", 10, 150, 10, h, 100, 20)
-    .setRange(1, 100)
+    .setRange(1, 200)
     .setLabel("Samplerate")
-    .setNumberOfTickMarks(99)
+    .setNumberOfTickMarks(199)
     .showTickMarks(false)
     .setValue(exporter.pointCloudSamples)
     .plugTo(exporter);
@@ -57,7 +57,7 @@ void setupUI()
   cp5.addSlider("outputMax", 10, 150, 10, h, 100, 20)
     .setRange(10, 1200)
     .setLabel("Max (mm)")
-    .setNumberOfTickMarks(1500)
+    .setNumberOfTickMarks(1199)
     .showTickMarks(false)
     .setValue(exporter.outputMax)
     .plugTo(exporter);
@@ -70,7 +70,29 @@ void setupUI()
     .showTickMarks(false)
     .setValue(exportResolution);
 
-  h += 30;
+  h += 40;
+  cp5.addSlider("retractHeight", 10, 150, 10, h, 100, 20)
+    .setRange(0.0, 2.0)
+    .setLabel("Retract Height (mm)")
+    .setNumberOfTickMarks(20)
+    .showTickMarks(false)
+    .setValue(retractHeight);
+
+  h += 25;
+  cp5.addSlider("pointDepth", 10, 150, 10, h, 100, 20)
+    .setRange(-2.0, 0.0)
+    .setLabel("Point Depth (mm)")
+    .setNumberOfTickMarks(20)
+    .showTickMarks(false)
+    .setValue(pointDepth);
+
+  h += 25;
+  cp5.addToggle("sortCloud")
+    .setPosition(10, h)
+    .setSize(100, 20)
+    .setCaptionLabel("Sort");
+
+  h += 60;
   cp5.addButton("exportBitmap")
     .setValue(100)
     .setPosition(10, h)
@@ -100,6 +122,14 @@ void setupUI()
     .setPosition(10, h)
     .setSize(200, 22)
     .setCaptionLabel("Export GCode")
+    ;
+
+  h += 30;
+  cp5.addButton("exportGLine")
+    .setValue(100)
+    .setPosition(10, h)
+    .setSize(200, 22)
+    .setCaptionLabel("Export GLine")
     ;
 
   h += 30;
@@ -176,6 +206,14 @@ void exportGCode(int value)
   if (exporter.exporting) return;
 
   exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.GCode);
+}
+
+void exportGLine(int value)
+{
+  if (!isUIInitialized) return;
+  if (exporter.exporting) return;
+
+  exporter.generateAsync(sketchPath("export/"), exportResolution, ExportType.GLine);
 }
 
 void generatePreview(int value)

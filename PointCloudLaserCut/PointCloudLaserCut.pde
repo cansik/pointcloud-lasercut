@@ -8,7 +8,11 @@ PointCloud pointCloud;
 String pointCloudFile = "";
 float startDepth = 400;
 
+// export params
 int exportResolution = 1;
+float retractHeight = 0.2; // mm
+float pointDepth = -0.1; // mm
+boolean sortCloud = false;
 
 LaserCutExporter exporter;
 
@@ -26,7 +30,7 @@ void setup()
   surface.setTitle("Point Cloud Slicer");
 
   // set default arguments
-  pointCloudFile = sketchPath("data/forest-blk360_centered.ply");
+  pointCloudFile = sketchPath("data/plant.ply");
 
   // change clipping
   perspective(PI/3.0, (float)width/height, 0.1, 100000);

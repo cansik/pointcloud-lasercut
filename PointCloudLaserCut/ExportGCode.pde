@@ -1,6 +1,4 @@
 class ExportGCode extends ExportImage {
-  float liftZ = 0.5;
-
   ArrayList<String> gcode;
 
   public ExportGCode(int w, int h) {
@@ -10,12 +8,12 @@ class ExportGCode extends ExportImage {
   }
 
   String getExtension() {
-    return "gcode";
+    return "nc";
   }
 
   void beginDraw() {
     comment("drawing some points");
-    
+
     // settings
     absoluteMode();
     unitMM();
@@ -26,11 +24,12 @@ class ExportGCode extends ExportImage {
     moveRapidXY(x, y);
 
     // dip
-    moveRapidZ(0.0f);
-    moveRapidZ(liftZ);
+    moveRapidZ(pointDepth);
+    moveRapidZ(retractHeight);
   }
 
   void endDraw() {
+    moveRapidZ(retractHeight);
     programmEnd();
   }
 
